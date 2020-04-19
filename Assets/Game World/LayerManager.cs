@@ -23,7 +23,7 @@ public class LayerManager : MonoBehaviour {
 
         duplicateCounter = transform.GetComponent<LayerEnchancer>().duplicateCounter;
         
-        SetTopTileColor(-6, 9, Color.red);
+        //SetTopTileColor(-6, 9, Color.red);
     }
 
     public int GetHeight(int x, int y) {
