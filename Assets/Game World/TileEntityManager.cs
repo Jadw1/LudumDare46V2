@@ -9,14 +9,21 @@ public class TileEntityManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (var obj in GameObject.FindGameObjectsWithTag("TileEntity"))
+        foreach (var obj in GameObject.FindGameObjectsWithTag("Tile Entity"))
         {
-            var te = obj.GetComponent<TileEntity>();
-            
-            if (te == null) throw new Exception("WTF 2!");
-
-            Register(te);
+            RegisterGameObject(obj);
         }
+        
+        RegisterGameObject(GameObject.FindWithTag("Player"));
+    }
+
+    private void RegisterGameObject(GameObject obj)
+    {
+        var te = obj.GetComponent<TileEntity>();
+            
+        if (te == null) throw new Exception("WTF 2!");
+
+        Register(te);
     }
 
     public void Register(TileEntity te)

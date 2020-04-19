@@ -7,6 +7,7 @@ TagManager:
   - Original Layer
   - Duplicate Layer
   - Game Controller
+  - Tile Entity
   layers:
   - Default
   - TransparentFX
