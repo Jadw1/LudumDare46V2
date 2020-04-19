@@ -17,6 +17,6 @@ public class LayerColorizer : MonoBehaviour
 
         var color = Color.Lerp(Color.gray, Color.white, shade);
 
-        _tilemap.color = color;
+        _tilemap.color = color;    
     }
 }
