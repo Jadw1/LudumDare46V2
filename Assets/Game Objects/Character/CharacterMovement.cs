@@ -13,28 +13,15 @@ public class CharacterMovement : MonoBehaviour {
         }
 
         if (timeToTick <= 0.0f) {
-            float moveX = 0.0f;
-            float moveY = 0.0f;
-            
-            if (Input.GetKey(KeyCode.W)) {
-                moveX = 0.0f;
-                moveY = 1.0f;
-            }
-            else if (Input.GetKey(KeyCode.S)) {
-                moveX = 0.0f;
-                moveY = -1.0f;
-            }
-            else if (Input.GetKey(KeyCode.A)) {
-                moveX = -1.0f;
-                moveY = 0.0f;
-            }
-            else if (Input.GetKey(KeyCode.D)) {
-                moveX = 1.0f;
-                moveY = 0.0f;
-            }
+            int moveX = (int)Input.GetAxisRaw("Horizontal");
+            int moveY = (int)Input.GetAxisRaw("Vertical");
 
-            if (moveX != 0.0f || moveY != 0.0f) {
+            if (moveX != 0 || moveY != 0) {
                 timeToTick = tickTime;
+
+                if (moveX != 0)
+                    moveY = 0;
+                
                 transform.Translate(moveX, moveY, 0.0f);
             }
         }

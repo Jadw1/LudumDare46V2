@@ -24,7 +24,7 @@ public class LayerSpacingHelper : MonoBehaviour
         Debug.Log("Layers have been adjusted.");
 
         AdjustSpacingForChild(transform.GetChild(0));
-        AdjustSpacingForChild(transform.GetChild(1), 0.05f);
+        //AdjustSpacingForChild(transform.GetChild(1), 0.05f);
         
         spaceLayers = false;
     }
