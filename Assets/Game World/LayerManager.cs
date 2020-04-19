@@ -11,8 +11,7 @@ public class LayerManager : MonoBehaviour {
     private Tilemap[] allLayers;
     private Tilemap baseLayer;
     
-    private int duplicateCounter;
-    public Color lerpTo;
+    
     
     
     void Start() {
@@ -21,11 +20,18 @@ public class LayerManager : MonoBehaviour {
         allLayers = child.GetComponentsInChildren<Tilemap>();
         baseLayer = transform.GetChild(1).GetComponent<Tilemap>();
 
-        duplicateCounter = transform.GetComponent<LayerEnchancer>().duplicateCounter;
-        
-        //SetTopTileColor(-6, 9, Color.red);
+        //duplicateCounter = transform.GetComponent<LayerEnchancer>().duplicateCounter;
     }
 
+    public bool CanMoveTo(int x, int y) {
+        return mainLayers[0].GetTile(new Vector3Int(x, y, 0)) == null;
+    }
+    
+    //=======EXPERIMENTALS===========
+    /*
+     private int duplicateCounter;
+    public Color lerpTo;
+     
     public int GetHeight(int x, int y) {
         return GetTopLayer(x, y) + 1;
     }
@@ -76,4 +82,5 @@ public class LayerManager : MonoBehaviour {
         tilemap.SetTileFlags(pos, TileFlags.None);
         tilemap.SetColor(pos, color);
     }
+    */
 }
