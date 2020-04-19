@@ -11,12 +11,12 @@ public class StoneBlock : DestructableEntity
             return true;
         }
 
-        character.Think("I can't break this with my bare hands...");
+        character.ThinkImmediete("I can't break this with my bare hands...");
         return false;
     }
 
     protected override void OnTryBreak(CharacterManager characterManager)
     {
-        characterManager.Think("[try again to break this]");
+        characterManager.ThinkImmediete("[try again to break this]");
     }
 }

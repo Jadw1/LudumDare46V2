@@ -8,15 +8,19 @@ using UnityEngine.UI;
 public class ThoughtInfo : MonoBehaviour
 {
     public string[] initialThoughts;
-    
+
     public float typingSpeed = 0.05f;
     public float pauseTime = 2.5f;
-    
+
     private TextMeshProUGUI _tmp;
     private Image _bg;
 
     private Queue<string> _thoughts = new Queue<string>();
-    private bool _idle = true;
+
+    private bool _immediate;
+    private float _timer = 0.0f;
+    private Queue<char> _thought = new Queue<char>();
+
     private void Start()
     {
         _bg = GetComponent<Image>();
@@ -33,46 +37,70 @@ public class ThoughtInfo : MonoBehaviour
         var playerManager = player.GetComponent<CharacterManager>();
 
         playerManager.OnThought += AddThought;
-    }
-
-    private IEnumerator TypeThought(string thought)
-    {
-        _idle = false;
-        _tmp.SetText("");
-        foreach (var letter in thought.ToCharArray())
-        {
-            _tmp.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
-        }
-        
-        yield return new WaitForSeconds(pauseTime);
-        _idle = true;
+        playerManager.OnThoughtImmediete += AddImmediateThought;
     }
 
     private void Enable(bool enable)
     {
+        if (_bg.enabled == enable) return;
         _bg.enabled = enable;
         _tmp.enabled = enable;
     }
 
-    public void AddThought(string thought)
+    public void AddImmediateThought(string thought)
     {
-        Enable(true);
+        _immediate = true;
+        _thoughts.Clear();
         _thoughts.Enqueue(thought);
     }
-    
+
+    public void AddThought(string thought)
+    {
+        if (_thought.Count == 0) _immediate = true;
+        _thoughts.Enqueue(thought);
+    }
+
     private void FixedUpdate()
     {
-        if (_idle)
+        _timer += Time.deltaTime;
+        
+        if (_immediate)
         {
+            _tmp.SetText("");
+            Enable(true);
+            _thought.Clear();
+            _immediate = false;
+            foreach (var character in _thoughts.Dequeue().ToCharArray())
+            {
+                _thought.Enqueue(character);
+            }
+        } else if (_thought.Count == 0)
+        {
+            if (!(_timer > pauseTime)) return;
+            
+            _timer = 0.0f;
             if (_thoughts.Count != 0)
             {
-                StartCoroutine(TypeThought(_thoughts.Dequeue()));
+                foreach (var character in _thoughts.Dequeue().ToCharArray())
+                {
+                    _thought.Enqueue(character);
+                }
+
+                _tmp.SetText("");
+                Enable(true);
             }
             else
             {
+                _tmp.SetText("");
                 Enable(false);
             }
+
+            return;
         }
+
+        if (!(_timer > typingSpeed)) return;
+        
+        _timer = 0.0f;
+        _tmp.text += _thought.Dequeue();
     }
 }
