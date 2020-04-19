@@ -62,6 +62,10 @@ public class CharacterInventory : MonoBehaviour
             if (item.itemType == ItemType.PICKAXE)
             {
                 InventoryItem = InventoryItem.PICKAXE;
+                foreach (var o in GameObject.FindGameObjectsWithTag("Pickaxe Thought"))
+                {
+                    Destroy(o);
+                }
             }
             else
             {

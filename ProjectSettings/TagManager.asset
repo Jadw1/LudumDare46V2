@@ -9,6 +9,7 @@ TagManager:
   - Game Controller
   - Tile Entity
   - Game Master
+  - Pickaxe Thought
   layers:
   - Default
   - TransparentFX
