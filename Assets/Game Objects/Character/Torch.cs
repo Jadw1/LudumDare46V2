@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
-public class Torch : MonoBehaviour {
+public delegate void OnTorchConditionChange(int condition);
+
+public class Torch : MonoBehaviour
+{
+    public event OnTorchConditionChange OnTorchConditionChange;
+    
     public int maxCondition;
     public int condition;
 
@@ -30,6 +35,7 @@ public class Torch : MonoBehaviour {
     void OnTick(int tick) {
         if (condition > 0) {
             condition--;
+            OnTorchConditionChange?.Invoke(condition);
             light.pointLightOuterRadius = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
         }
         //event if light goes out?
