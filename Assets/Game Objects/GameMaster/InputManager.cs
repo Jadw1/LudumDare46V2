@@ -49,7 +49,10 @@ public class InputManager : MonoBehaviour {
         
         movementKeyPressed = false;
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.E)) {
+            gm.PickUp();
+        }
+        else if (Input.GetKeyDown(KeyCode.Space)) {
             gm.Skip();
         }
     }

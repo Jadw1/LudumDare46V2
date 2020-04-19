@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,18 +16,13 @@ public enum InventoryItem
     PICKAXE
 }
 
-public delegate void InventoryItemChanged();
-
-public delegate void InventoryLightSourceChanged();
-
 public class CharacterInventory : MonoBehaviour
 {
-    public event InventoryItemChanged OnItemChange;
-    public event InventoryLightSourceChanged OnLightSourceChange;
+    public event Action OnItemChange;
+    public event Action OnLightSourceChange;
 
     private InventoryItem _inventoryItem = InventoryItem.NONE;
     private LightSource _lightSource = LightSource.MATCH;
-    private int _lightSourceCharge = 15;
 
     public InventoryItem InventoryItem
     {
@@ -47,14 +43,28 @@ public class CharacterInventory : MonoBehaviour
             _lightSource = value;
         }
     }
+
+    private Stack<PickableEntity> onGround;
+
+    private void Start() {
+        onGround = new Stack<PickableEntity>();
+        GameObject.FindWithTag("Game Master").GetComponent<GameManager>().tickEvent += OnTick;
+    }
+
+    public void AddGroundItem(PickableEntity item) {
+        onGround.Push(item);
+    } 
     
-    public int LightSourceCharge
-    {
-        get => _lightSourceCharge;
-        set
-        {
-            OnLightSourceChange();
-            _lightSourceCharge = value;
+    public void PickUp() {
+        if (onGround.Count > 0) {
+            var item = onGround.Pop();
+            Destroy(item.gameObject);
         }
     }
+
+    private void OnTick(int tick) {
+        onGround.Clear();
+    }
+    
+    
 }

@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public enum PlayerAction {
+    MOVE, SKIP, PICKUP
+}
+
 public class GameManager : MonoBehaviour {
     private int tickCounter;
     public float minTickTime;
@@ -12,6 +16,7 @@ public class GameManager : MonoBehaviour {
     private Transform player;
     private Vector2Int playerMovement;
     public GameObject playerFootstep;
+    private PlayerAction playerAction;
     
     private LayerManager layerManager;
     
@@ -28,6 +33,7 @@ public class GameManager : MonoBehaviour {
 
     //=======  ACTIONS  ===========
     public void Skip() {
+        playerAction = PlayerAction.SKIP;
         Tick();
     }
 
@@ -51,19 +57,41 @@ public class GameManager : MonoBehaviour {
         }
 
         playerMovement = (moveX != 0) ? new Vector2Int(moveX, 0) : new Vector2Int(0, moveY);
+        playerAction = PlayerAction.MOVE;
+        Tick();
+    }
 
+    public void PickUp() {
+        playerAction = PlayerAction.PICKUP;
         Tick();
     }
     
     private void Tick() {
-        MovePlayer();
+        HandlePlayerAction();
         tickEvent?.Invoke(tickCounter);
 
         tickCounter++;
     }
 
+    private void HandlePlayerAction() {
+        switch (playerAction) {
+            case PlayerAction.MOVE:
+                MovePlayer();
+                break;
+            case PlayerAction.SKIP:
+                CheckStaticCollision();
+                break;
+            case PlayerAction.PICKUP:
+                CheckStaticCollision();
+                var inv = player.GetComponent<CharacterInventory>();
+                inv.PickUp();
+                break;
+        }
+    }
+    
     private void MovePlayer() {
         if (playerMovement.x == 0 && playerMovement.y == 0) {
+            CheckStaticCollision();
             return;
         }
 
@@ -82,10 +110,12 @@ public class GameManager : MonoBehaviour {
         int toX = (int)player.position.x + playerMovement.x;
         int toY = (int)player.position.y + playerMovement.y;
         if (!layerManager.CanMoveTo(toX, toY)) {
+            CheckStaticCollision();
             return false;
         }
 
-        var ray = Physics2D.RaycastAll(player.position, playerMovement, 1.0f);
+        var pos = player.position + new Vector3(playerMovement.x, playerMovement.y, 0.0f);
+        var ray = Physics2D.RaycastAll(pos, playerMovement, 0.4f);
         if (ray.Length == 0) {
             return true;
         }
@@ -104,5 +134,12 @@ public class GameManager : MonoBehaviour {
         }
 
         return result;
+    }
+
+    private void CheckStaticCollision() {
+        var ray = Physics2D.RaycastAll(player.position, Vector2.up, 0.4f);
+        foreach (var hit2D in ray) {
+            hit2D.transform.GetComponent<TileEntity>()?.OnCollision(player, tickCounter);
+        }
     }
 }
