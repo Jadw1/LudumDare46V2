@@ -23,7 +23,7 @@ public class LayerManager : MonoBehaviour {
 
         duplicateCounter = transform.GetComponent<LayerEnchancer>().duplicateCounter;
         
-        //SetTopTileColor(-6, 9, Color.red);
+        SetTopTileColor(-6, 9, Color.red);
     }
 
     private void Update() {
@@ -41,7 +41,9 @@ public class LayerManager : MonoBehaviour {
 
         int layersCount = (layer + 1) * (1 + duplicateCounter) + 1;
 
-        for (int i = layersCount - 2; i >= 0; i++) {
+        for (int i = layersCount - 2; i >= 0; i--) {
+            //Color testColor = Color.Lerp()
+            
             float r = LerpColorComponent(grayOutTo, color.r, ((float) (i + 2)) / layersCount);
             float g = LerpColorComponent(grayOutTo, color.g, ((float) (i + 2)) / layersCount);
             float b = LerpColorComponent(grayOutTo, color.b, ((float) (i + 2)) / layersCount);
