@@ -23,7 +23,7 @@ Material:
   m_Name: Lit Sprite
   m_Shader: {fileID: -6465566751694194690, guid: 49d06eb1db0b18e4d986ad9e0854d241,
     type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

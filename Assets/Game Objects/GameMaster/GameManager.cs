@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     private Vector2Int playerMovement;
 
     public float minTickTime;
+    public GameObject playerFootstep;
     
     // Start is called before the first frame update
     private void Awake() {
@@ -51,6 +52,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void movePlayer() {
+        if (playerFootstep && playerMovement.magnitude != 0.0f) {
+            var footstep = Instantiate(playerFootstep, transform);
+            footstep.transform.position = player.position;
+        }
+        
         player.Translate(playerMovement.x, playerMovement.y, 0.0f);
         playerMovement = Vector2Int.zero;
     }
