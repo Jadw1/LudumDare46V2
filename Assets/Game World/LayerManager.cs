@@ -10,26 +10,22 @@ public class LayerManager : MonoBehaviour {
     private Tilemap[] mainLayers;
     private Tilemap[] allLayers;
     private Tilemap baseLayer;
-
-    public float grayOutTo;
-
+    
     private int duplicateCounter;
+    public Color lerpTo;
     
     
     void Start() {
-        mainLayers = transform.GetComponentsInChildren<Tilemap>().Where(t => t.CompareTag("Original Layer")).ToArray();
-        allLayers = transform.GetComponentsInChildren<Tilemap>();
-        baseLayer = transform.parent.GetChild(1).GetComponent<Tilemap>();
+        var child = transform.GetChild(0);
+        mainLayers = child.GetComponentsInChildren<Tilemap>().Where(t => t.CompareTag("Original Layer")).ToArray();
+        allLayers = child.GetComponentsInChildren<Tilemap>();
+        baseLayer = transform.GetChild(1).GetComponent<Tilemap>();
 
         duplicateCounter = transform.GetComponent<LayerEnchancer>().duplicateCounter;
         
         SetTopTileColor(-6, 9, Color.red);
     }
 
-    private void Update() {
-        
-    }
-    
     public int GetHeight(int x, int y) {
         return GetTopLayer(x, y) + 1;
     }
@@ -42,19 +38,13 @@ public class LayerManager : MonoBehaviour {
         int layersCount = (layer + 1) * (1 + duplicateCounter) + 1;
 
         for (int i = layersCount - 2; i >= 0; i--) {
-            //Color testColor = Color.Lerp()
-            
-            float r = LerpColorComponent(grayOutTo, color.r, ((float) (i + 2)) / layersCount);
-            float g = LerpColorComponent(grayOutTo, color.g, ((float) (i + 2)) / layersCount);
-            float b = LerpColorComponent(grayOutTo, color.b, ((float) (i + 2)) / layersCount);
-            
-            SetTileColor(pos, i, new Color(r, g, b));
+            Color c = Color.Lerp(lerpTo, color, ((float) (i + 2)) / layersCount);
+
+            SetTileColor(pos, i, c);
         }
         
-        float rb = LerpColorComponent(grayOutTo, color.r, ((float) 1) / layersCount);
-        float gb = LerpColorComponent(grayOutTo, color.g, ((float) 1) / layersCount);
-        float bb = LerpColorComponent(grayOutTo, color.b, ((float) 1) / layersCount);
-        SetTileColor(pos, -1, new Color(rb, gb,bb));
+        Color cc = Color.Lerp(lerpTo, color, ((float) 1) / layersCount);
+        SetTileColor(pos, -1, cc);
         
     }
 
@@ -82,7 +72,7 @@ public class LayerManager : MonoBehaviour {
     
     //layer is index in allLayers array, negative is base layer
     private void SetTileColor(Vector3Int pos, int layer, Color color) {
-        Tilemap tilemap = (layer > 0) ? allLayers[layer] : baseLayer;
+        Tilemap tilemap = (layer >= 0) ? allLayers[layer] : baseLayer;
         tilemap.SetTileFlags(pos, TileFlags.None);
         tilemap.SetColor(pos, color);
     }

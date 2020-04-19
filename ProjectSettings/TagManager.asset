@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Original Layer
   - Duplicate Layer
+  - Game Controller
   layers:
   - Default
   - TransparentFX
