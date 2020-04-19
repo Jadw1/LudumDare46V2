@@ -24,18 +24,20 @@ public class LayerDuplicator : MonoBehaviour
         var distance = Mathf.Abs(layers[0].localPosition.z - layers[1].localPosition.z);
         
         // calulate gap between new layers for correct layer count
-        var gap = distance / (count - 1);
+        var gap = distance / (count + 1);
         
         for (int i = 0; i < childCount; i++)
         {
             var layer = layers[i];
             var height = distance * (i);
 
-            for (int j = 0; j < count - 1; j++)
+            for (int j = 1; j <= count; j++)
             {
                 var adjustedHeight = height + j * gap;
 
                 var newLayer = Instantiate(layer, layersParent);
+                newLayer.SetSiblingIndex(layer.GetSiblingIndex() + j);
+                newLayer.name = layer.name + "_" + j;
                 newLayer.transform.localPosition = new Vector3(0, 0, -adjustedHeight);
             }
             

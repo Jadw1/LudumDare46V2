@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 603ba39c578867b4383bc213aad381e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 3
+  count: 1
 --- !u!114 &4674129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,6 +387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &479711769
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,6 +585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &590727121
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,6 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &876236107
 GameObject:
   m_ObjectHideFlags: 0
@@ -27162,6 +27165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &1314662797
 GameObject:
   m_ObjectHideFlags: 0
@@ -27371,6 +27375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &1632309807
 GameObject:
   m_ObjectHideFlags: 0
@@ -27525,6 +27530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1 &1839043435
 GameObject:
   m_ObjectHideFlags: 0
@@ -27540,7 +27546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1839043436
 Transform:
   m_ObjectHideFlags: 0
@@ -27936,6 +27942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799be8ecd6075dc4394d1975380dcc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doNotDuplicate: 0
 --- !u!1001 &2761538176694386830
 PrefabInstance:
   m_ObjectHideFlags: 0
