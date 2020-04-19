@@ -8,6 +8,7 @@ public class StoneBlock : DestructableEntity
     {
         if (inventory.InventoryItem == InventoryItem.PICKAXE)
         {
+            character.ThinkImmediete("Hard work paid off...");
             return true;
         }
 

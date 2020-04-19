@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour {
     private void Tick() {
         HandlePlayerAction();
         tickEvent?.Invoke(tickCounter);
-
+        Debug.Log(tickCounter);
         tickCounter++;
     }
 

@@ -29,8 +29,8 @@ public class CharacterInventory : MonoBehaviour
         get => _inventoryItem;
         set
         {
-            OnItemChange();
             _inventoryItem = value;
+            OnItemChange();
         }
     }
     
@@ -39,8 +39,8 @@ public class CharacterInventory : MonoBehaviour
         get => _lightSource;
         set
         {
-            OnLightSourceChange();
             _lightSource = value;
+            OnLightSourceChange();
         }
     }
 
@@ -58,6 +58,17 @@ public class CharacterInventory : MonoBehaviour
     public void PickUp() {
         if (onGround.Count > 0) {
             var item = onGround.Pop();
+
+            if (item.itemType == ItemType.PICKAXE)
+            {
+                InventoryItem = InventoryItem.PICKAXE;
+            }
+            else
+            {
+                GetComponentInChildren<Torch>().SetTorch(190, 15);
+                LightSource = LightSource.TORCH;
+            }
+            
             Destroy(item.gameObject);
         }
     }
