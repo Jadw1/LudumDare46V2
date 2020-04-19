@@ -6,16 +6,15 @@ using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour {
     private int tickCounter;
+    public float minTickTime;
+    public event Action<int> tickEvent;
     
     private Transform player;
     private Vector2Int playerMovement;
-
-    public float minTickTime;
     public GameObject playerFootstep;
-
+    
     private LayerManager layerManager;
     
-    // Start is called before the first frame update
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
         layerManager = GameObject.FindWithTag("Game Controller")?.GetComponent<LayerManager>();
@@ -27,6 +26,7 @@ public class GameManager : MonoBehaviour {
         tickCounter = 0;
     }
 
+    //=======  ACTIONS  ===========
     public void Skip() {
         Tick();
     }
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour {
     
     private void Tick() {
         MovePlayer();
+        tickEvent?.Invoke(tickCounter);
 
         tickCounter++;
     }
