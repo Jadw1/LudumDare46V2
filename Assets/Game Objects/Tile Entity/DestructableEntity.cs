@@ -5,21 +5,29 @@ using UnityEngine;
 
 public class DestructableEntity : TileEntity
 {
-    public string thought;
     private int lastContact = -1;
-    
+
+    protected virtual bool CanBreak(CharacterManager character, CharacterInventory inventory)
+    {
+        return true;
+    }
+
+    protected virtual void OnTryBreak(CharacterManager characterManager)
+    {
+        
+    }
+
     public override void OnCollision(Transform collision, int tick) {
-        if (tick == lastContact + 1) {
-            Destroy(gameObject);
+        var characterManager = collision.GetComponent<CharacterManager>();
+        var characterInventory = collision.GetComponent<CharacterInventory>();
+        
+        if (tick == lastContact + 1)
+        {
+            if (CanBreak(characterManager, characterInventory)) Destroy(gameObject);
         }
         else
         {
-            var characterManager = collision.GetComponent<CharacterManager>();
-            
-            if (!string.IsNullOrWhiteSpace(thought))
-            {
-                characterManager.Think(thought);
-            }
+            OnTryBreak(characterManager);
         }
 
         lastContact = tick;
