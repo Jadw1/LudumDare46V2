@@ -12,23 +12,40 @@ public class InventoryInfo : MonoBehaviour
     
     private void Start()
     {
-        _tmp = GetComponent<TextMeshProUGUI>();
+        _tmp = GetComponentInChildren<TextMeshProUGUI>();
         _inv = GameObject.FindWithTag("Player").GetComponent<CharacterInventory>();
 
         RedrawInventory();
 
         _inv.OnItemChange += RedrawInventory;
+        _inv.OnLightSourceChange += RedrawInventory;
     }
 
     private void RedrawInventory()
     {
-        if (_inv.InventoryItem == InventoryItem.PICKAXE)
+        StringBuilder builder = new StringBuilder();
+
+        builder.AppendLine("You have");
+        
+        switch (_inv.LightSource)
         {
-            _tmp.SetText("I have a pickaxe.");
+            case LightSource.MATCH:
+                builder.AppendLine("<color #ffff00>a simple match");
+                break;
+            case LightSource.TORCH:
+                builder.AppendLine("<color #ffff00>a sturdy torch");
+                break;
+            default:
+                builder.AppendLine("<color #ff0000>nothing");
+                break;
         }
-        else
-        {
-            _tmp.SetText("I don't have any tools.");
-        }
+
+        builder.AppendLine("</color>to keep you warm.\n");
+
+        builder.Append(_inv.InventoryItem == InventoryItem.PICKAXE
+            ? "You have a <color #ffff00>pickaxe</color>."
+            : "You don't have any tools.");
+
+        _tmp.SetText(builder.ToString());
     }
 }
