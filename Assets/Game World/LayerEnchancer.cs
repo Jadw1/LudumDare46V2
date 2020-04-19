@@ -11,9 +11,10 @@ public class LayerEnchancer : MonoBehaviour {
     
     private void Awake() {
         List<Transform> layers = new List<Transform>();
-        var childCount = transform.childCount;
+        var child = transform.GetChild(0);
+        var childCount = child.childCount;
         for (int i = 0; i < childCount; i++) {
-            layers.Add(transform.GetChild(i));
+            layers.Add(child.GetChild(i));
         }
         
         Transform[,] duplicates = new Transform[layers.Count, duplicateCounter];
@@ -28,7 +29,7 @@ public class LayerEnchancer : MonoBehaviour {
             for (int j = 0; j < duplicateCounter; j++) {
                 var dupHeight = baseHeight - (j + 1) * gap;
                 
-                var dup = Instantiate(layers[i], transform);
+                var dup = Instantiate(layers[i], child);
                 dup.transform.localPosition = new Vector3(0.0f, 0.0f, -dupHeight);
                 dup.tag = "Duplicate Layer";
                 duplicates[i, j] = dup;
@@ -48,7 +49,7 @@ public class LayerEnchancer : MonoBehaviour {
 
         var index = 0;
         foreach (var layer in sorted) {
-            layer.parent = transform;
+            layer.parent = child;
             layer.SetSiblingIndex(index);
             index++;
         }
