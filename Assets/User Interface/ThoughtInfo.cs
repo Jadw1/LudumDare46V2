@@ -28,6 +28,11 @@ public class ThoughtInfo : MonoBehaviour
         {
             AddThought(thought);
         }
+
+        var player = GameObject.FindWithTag("Player");
+        var playerManager = player.GetComponent<CharacterManager>();
+
+        playerManager.OnThought += AddThought;
     }
 
     private IEnumerator TypeThought(string thought)
