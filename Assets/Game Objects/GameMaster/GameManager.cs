@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
 
     #region PLAYER
     private Transform player;
+    private CharacterManager characterManager;
     private PlayerAction playerAction;
     private Vector2Int playerMovement;
     public GameObject playerFootstep;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour {
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
+        characterManager = player.GetComponent<CharacterManager>();
         torch = player.GetComponentInChildren<Torch>();
         layerManager = GameObject.FindWithTag("Game Controller")?.GetComponent<LayerManager>();
         temperature = postProcessing.components[1] as WhiteBalance;
@@ -67,11 +69,16 @@ public class GameManager : MonoBehaviour {
         savedObjects.Clear();
     }
 
+    public void SetCheckpoint(Vector2Int pos)
+    {
+        checkPoint = pos;
+    }
+
     private IEnumerator KillPlayer() {
         block = true;
         deathAnimator.SetTrigger("Die");
         yield return new WaitForSeconds(waitForDeathAnimation);
-        
+    
         player.localPosition = new Vector3(checkPoint.x, checkPoint.y);
         torch.RestoreTorch();
         RestoreEntities();
@@ -79,6 +86,7 @@ public class GameManager : MonoBehaviour {
         temperature.temperature.value = 0.0f;
         temperature.active = false;
         block = false;
+        characterManager.OnDeath();
     }
 
     #region ACTIONS

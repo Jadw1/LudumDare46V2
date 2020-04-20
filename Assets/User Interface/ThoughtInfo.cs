@@ -70,7 +70,17 @@ public class ThoughtInfo : MonoBehaviour
             Enable(true);
             _thought.Clear();
             _immediate = false;
-            foreach (var character in _thoughts.Dequeue().ToCharArray())
+
+            var thought = _thoughts.Dequeue();
+
+            if (string.IsNullOrWhiteSpace(thought))
+            {
+                _tmp.text = "";
+                Enable(false);
+                return;
+            }
+            
+            foreach (var character in thought.ToCharArray())
             {
                 _thought.Enqueue(character);
             }
