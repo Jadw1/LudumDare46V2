@@ -23,7 +23,10 @@ public class DestructableEntity : TileEntity
         
         if (tick == lastContact + 1)
         {
-            if (CanBreak(characterManager, characterInventory)) Destroy(gameObject);
+            if (CanBreak(characterManager, characterInventory)) {
+                GameObject.FindWithTag("Game Master").GetComponent<GameManager>().RegisterEntityToRestore(this);
+                gameObject.SetActive(false);
+            }
         }
         else
         {

@@ -9,18 +9,27 @@ public enum PlayerAction {
 }
 
 public class GameManager : MonoBehaviour {
-    private int tickCounter;
+    #region TICKS
     public float minTickTime;
     public event Action<int> tickEvent;
     
+    private int tickCounter;
+    #endregion
+
+    #region PLAYER
     private Transform player;
-    private Torch torch;
+    private PlayerAction playerAction;
     private Vector2Int playerMovement;
     public GameObject playerFootstep;
-    private PlayerAction playerAction;
+
+    private Torch torch;
     public int tickToDieInDark = 3;
     
+    public Vector2Int checkPoint;
+    #endregion
+    
     private LayerManager layerManager;
+    private List<DestructableEntity> savedObjects;
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
@@ -32,9 +41,28 @@ public class GameManager : MonoBehaviour {
         }
 
         tickCounter = 0;
+
+        savedObjects = new List<DestructableEntity>();
     }
 
-    //=======  ACTIONS  ===========
+    public void RegisterEntityToRestore(DestructableEntity entity) {
+        savedObjects.Add(entity);
+    }
+
+    private void RestoreEntities() {
+        foreach (var entity in savedObjects) {
+            entity.gameObject.SetActive(true);
+        }
+        savedObjects.Clear();
+    }
+
+    private void KillPlayer() {
+        player.localPosition = new Vector3(checkPoint.x, checkPoint.y);
+        torch.RestoreTorch();
+        RestoreEntities();
+    }
+
+    #region ACTIONS
     public void Skip() {
         playerAction = PlayerAction.SKIP;
         Tick();
@@ -68,6 +96,7 @@ public class GameManager : MonoBehaviour {
         playerAction = PlayerAction.PICKUP;
         Tick();
     }
+    #endregion
     
     private void Tick() {
         HandlePlayerAction();
@@ -79,7 +108,7 @@ public class GameManager : MonoBehaviour {
     private void CheckTorch() {
         if (torch.condition == 0) {
             if (tickToDieInDark == 0) {
-                Debug.LogError("PLAYER KILLED!!!");
+                KillPlayer();
             }
             else {
                 tickToDieInDark--;
@@ -102,7 +131,8 @@ public class GameManager : MonoBehaviour {
                 break;
         }
     }
-    
+
+    #region MOVEMENT & COLLISION
     private void MovePlayer() {
         if (playerMovement.x == 0 && playerMovement.y == 0) {
             CheckStaticCollision();
@@ -110,12 +140,12 @@ public class GameManager : MonoBehaviour {
         }
 
         if (CanMove()) {
-         if (playerFootstep) {
-             var footstep = Instantiate(playerFootstep, transform);
-             footstep.transform.position = player.position;
-         }
+            if (playerFootstep) {
+                var footstep = Instantiate(playerFootstep, transform);
+                footstep.transform.position = player.position;
+            }
         
-         player.Translate(playerMovement.x, playerMovement.y, 0.0f);
+            player.Translate(playerMovement.x, playerMovement.y, 0.0f);
         }
         playerMovement = Vector2Int.zero;
     }
@@ -156,4 +186,6 @@ public class GameManager : MonoBehaviour {
             hit2D.transform.GetComponent<TileEntity>()?.OnCollision(player, tickCounter);
         }
     }
+    #endregion
+    
 }

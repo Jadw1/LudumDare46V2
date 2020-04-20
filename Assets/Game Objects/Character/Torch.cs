@@ -33,6 +33,11 @@ public class Torch : MonoBehaviour
         light.pointLightOuterRadius = maxRadious;
     }
 
+    public void RestoreTorch() {
+        condition = maxCondition;
+        radious = maxRadious;
+    }
+    
     void OnTick(int tick) {
         if (condition > 0) {
             condition--;

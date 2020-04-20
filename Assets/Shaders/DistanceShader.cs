@@ -28,6 +28,10 @@ public class DistanceShader : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        GameObject.FindWithTag("Game Master").GetComponent<GameManager>().tickEvent -= OnTick;
+        GameObject gm;
+        gm = GameObject.FindWithTag("Game Master");
+        if (gm) {
+            gm.GetComponent<GameManager>().tickEvent -= OnTick;   
+        }
     }
 }
