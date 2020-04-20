@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 
     #region PLAYER
     private Transform player;
+    private CharacterManager characterManager;
     private PlayerAction playerAction;
     private Vector2Int playerMovement;
     public GameObject playerFootstep;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour {
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
+        characterManager = player.GetComponent<CharacterManager>();
         torch = player.GetComponentInChildren<Torch>();
         layerManager = GameObject.FindWithTag("Game Controller")?.GetComponent<LayerManager>();
         
@@ -56,10 +58,16 @@ public class GameManager : MonoBehaviour {
         savedObjects.Clear();
     }
 
+    public void SetCheckpoint(Vector2Int pos)
+    {
+        checkPoint = pos;
+    }
+    
     private void KillPlayer() {
         player.localPosition = new Vector3(checkPoint.x, checkPoint.y);
         torch.RestoreTorch();
         RestoreEntities();
+        characterManager.OnDeath();
     }
 
     #region ACTIONS
