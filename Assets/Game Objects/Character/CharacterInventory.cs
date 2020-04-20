@@ -63,13 +63,13 @@ public class CharacterInventory : MonoBehaviour
             {
                 InventoryItem = InventoryItem.PICKAXE;
             }
-            else
+            else if(item.itemType == ItemType.TORCH)
             {
                 GetComponentInChildren<Torch>().SetTorch(190, 15);
                 LightSource = LightSource.TORCH;
             }
             
-            Destroy(item.gameObject);
+            item.Action();
         }
     }
 
