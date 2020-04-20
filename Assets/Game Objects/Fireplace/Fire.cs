@@ -11,7 +11,7 @@ public class Fire : TileEntity {
     }
 
     public override void OnCollision(Transform collision, int tick) {
-        if (!fireplace.activated) {
+        if (!fireplace.activated && fireplace.canBeActivated) {
             var characterManager = collision.GetComponent<CharacterManager>();
             characterManager.ThinkImmediete("[press 'E' to activate]");
         }
