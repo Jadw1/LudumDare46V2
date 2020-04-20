@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public enum PlayerAction {
@@ -14,6 +16,7 @@ public class GameManager : MonoBehaviour {
     public event Action<int> tickEvent;
     
     private int tickCounter;
+    private bool block = false;
     #endregion
 
     #region PLAYER
@@ -23,25 +26,33 @@ public class GameManager : MonoBehaviour {
     public GameObject playerFootstep;
 
     private Torch torch;
-    public int tickToDieInDark = 3;
+    public int lifeTimeInDark = 5;
+    private int tickToDieInDark;
+    private Animator deathAnimator;
     
     public Vector2Int checkPoint;
     #endregion
     
     private LayerManager layerManager;
     private List<DestructableEntity> savedObjects;
+    public VolumeProfile postProcessing;
+    private WhiteBalance temperature;
+    public float waitForDeathAnimation = 1.0f;
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
         torch = player.GetComponentInChildren<Torch>();
         layerManager = GameObject.FindWithTag("Game Controller")?.GetComponent<LayerManager>();
-        
-        if (player == null || layerManager == null) {
+        temperature = postProcessing.components[1] as WhiteBalance;
+        deathAnimator = GameObject.FindWithTag("UI")?.GetComponent<Animator>();
+
+        if (!player || !layerManager || !postProcessing || !temperature) {
             throw new Exception("LOL XD");
         }
+        
 
         tickCounter = 0;
-
+        tickToDieInDark = lifeTimeInDark;
         savedObjects = new List<DestructableEntity>();
     }
 
@@ -56,10 +67,18 @@ public class GameManager : MonoBehaviour {
         savedObjects.Clear();
     }
 
-    private void KillPlayer() {
+    private IEnumerator KillPlayer() {
+        block = true;
+        deathAnimator.SetTrigger("Die");
+        yield return new WaitForSeconds(waitForDeathAnimation);
+        
         player.localPosition = new Vector3(checkPoint.x, checkPoint.y);
         torch.RestoreTorch();
         RestoreEntities();
+        tickToDieInDark = lifeTimeInDark;
+        temperature.temperature.value = 0.0f;
+        temperature.active = false;
+        block = false;
     }
 
     #region ACTIONS
@@ -99,6 +118,8 @@ public class GameManager : MonoBehaviour {
     #endregion
     
     private void Tick() {
+        if(block)
+            return;
         HandlePlayerAction();
         CheckTorch();
         tickEvent?.Invoke(tickCounter);
@@ -108,11 +129,14 @@ public class GameManager : MonoBehaviour {
     private void CheckTorch() {
         if (torch.condition == 0) {
             if (tickToDieInDark == 0) {
-                KillPlayer();
+                StartCoroutine(KillPlayer());
             }
             else {
                 tickToDieInDark--;
             }
+
+            temperature.active = true;
+            temperature.temperature.value = Mathf.Lerp(-60.0f, 0.0f, (float) tickToDieInDark / lifeTimeInDark);
         }
     }
 

@@ -10,6 +10,8 @@ TagManager:
   - Tile Entity
   - Game Master
   - Pickaxe Thought
+  - Post Processing
+  - UI
   layers:
   - Default
   - TransparentFX
