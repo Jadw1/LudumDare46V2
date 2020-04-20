@@ -22,10 +22,10 @@ public class InventoryInfo : MonoBehaviour
 
         _inv.OnItemChange += RedrawInventory;
         _inv.OnLightSourceChange += RedrawInventory;
-        _torch.OnTorchConditionChange += OnTorchConditionChange;
+        _torch.TorchConditionChangeEvent += TorchConditionChangeEvent;
     }
 
-    private void OnTorchConditionChange(int condition)
+    private void TorchConditionChangeEvent(int condition)
     {
         RedrawInventory();
     }

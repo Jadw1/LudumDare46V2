@@ -1,18 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 
-public delegate void OnTorchConditionChange(int condition);
-
 public class Torch : MonoBehaviour
 {
-    public event OnTorchConditionChange OnTorchConditionChange;
+    public event Action<int> TorchConditionChangeEvent;
     
     public int maxCondition;
     public int condition;
 
     public float maxRadious;
+    public float radious;
     
     private Light2D light;
     
@@ -29,14 +29,16 @@ public class Torch : MonoBehaviour
         this.maxRadious = maxRadious;
 
         condition = maxCondition;
+        radious = maxRadious;
         light.pointLightOuterRadius = maxRadious;
     }
 
     void OnTick(int tick) {
         if (condition > 0) {
             condition--;
-            OnTorchConditionChange?.Invoke(condition);
-            light.pointLightOuterRadius = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
+            TorchConditionChangeEvent?.Invoke(condition);
+            radious = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
+            light.pointLightOuterRadius = radious;
         }
         //event if light goes out?
     }

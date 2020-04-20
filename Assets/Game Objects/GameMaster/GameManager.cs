@@ -14,14 +14,17 @@ public class GameManager : MonoBehaviour {
     public event Action<int> tickEvent;
     
     private Transform player;
+    private Torch torch;
     private Vector2Int playerMovement;
     public GameObject playerFootstep;
     private PlayerAction playerAction;
+    public int tickToDieInDark = 3;
     
     private LayerManager layerManager;
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
+        torch = player.GetComponentInChildren<Torch>();
         layerManager = GameObject.FindWithTag("Game Controller")?.GetComponent<LayerManager>();
         
         if (player == null || layerManager == null) {
@@ -68,9 +71,20 @@ public class GameManager : MonoBehaviour {
     
     private void Tick() {
         HandlePlayerAction();
+        CheckTorch();
         tickEvent?.Invoke(tickCounter);
-        Debug.Log(tickCounter);
         tickCounter++;
+    }
+
+    private void CheckTorch() {
+        if (torch.condition == 0) {
+            if (tickToDieInDark == 0) {
+                Debug.LogError("PLAYER KILLED!!!");
+            }
+            else {
+                tickToDieInDark--;
+            }
+        }
     }
 
     private void HandlePlayerAction() {
