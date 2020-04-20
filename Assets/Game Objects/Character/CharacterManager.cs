@@ -11,9 +11,17 @@ public class CharacterManager : MonoBehaviour
 
     private CharacterInventory _inventory;
 
+    private SpriteRenderer _sprite;
+    private ParticleSystem _particleSystem;
+
+    public event Action OnBurn;
+    
     private void Start()
     {
         _inventory = GetComponent<CharacterInventory>();
+        _sprite = GetComponent<SpriteRenderer>();
+        _particleSystem = GetComponentInChildren<ParticleSystem>();
+        _particleSystem.Stop();
     }
 
     public void OnDeath()
@@ -31,6 +39,13 @@ public class CharacterManager : MonoBehaviour
             Think("I'm not a miner...");
             Think("Maybe?");
         }
+    }
+
+    public void EnableBurn()
+    {
+        OnBurn?.Invoke();
+        _sprite.color = Color.red;
+        _particleSystem.Play();
     }
     
     public void Think(string thought)

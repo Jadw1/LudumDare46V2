@@ -9,7 +9,10 @@ public class InventoryInfo : MonoBehaviour
 {
     private TextMeshProUGUI _tmp;
     private CharacterInventory _inv;
+    private CharacterManager _characterManager;
     private Torch _torch;
+
+    private bool burn = false;
     
     private void Start()
     {
@@ -17,12 +20,14 @@ public class InventoryInfo : MonoBehaviour
         var player = GameObject.FindWithTag("Player");
         _inv = player.GetComponent<CharacterInventory>();
         _torch = player.GetComponentInChildren<Torch>();
+        _characterManager = player.GetComponent<CharacterManager>();
         
         RedrawInventory();
 
         _inv.OnItemChange += RedrawInventory;
         _inv.OnLightSourceChange += RedrawInventory;
         _torch.TorchConditionChangeEvent += TorchConditionChangeEvent;
+        _characterManager.OnBurn += OnBurn;
     }
 
     private void TorchConditionChangeEvent(int condition)
@@ -30,8 +35,22 @@ public class InventoryInfo : MonoBehaviour
         RedrawInventory();
     }
 
+    private void OnBurn()
+    {
+        burn = true;
+        RedrawInventory();
+    }
+
     private void RedrawInventory()
     {
+        if (burn)
+        {
+            _tmp.SetText("<color #ff0000>YOU</color>\n" +
+                         "<color #ffff00>ARE</color>\n" +
+                         "<color #ff0000>THE TORCH</color>");
+            return;
+        }
+        
         StringBuilder builder = new StringBuilder();
 
         builder.AppendLine("You have");

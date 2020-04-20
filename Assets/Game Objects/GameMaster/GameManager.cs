@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public enum PlayerAction {
@@ -39,6 +40,8 @@ public class GameManager : MonoBehaviour {
     public VolumeProfile postProcessing;
     private WhiteBalance temperature;
     public float waitForDeathAnimation = 1.0f;
+
+    private int burnTicks = -1;
     
     private void Awake() {
         player = GameObject.FindWithTag("Player")?.transform;
@@ -58,6 +61,14 @@ public class GameManager : MonoBehaviour {
         savedObjects = new List<DestructableEntity>();
     }
 
+    public void BurnPlayer()
+    {
+        if (burnTicks != -1) return;
+        burnTicks = 8;
+        characterManager.ThinkImmediete("Finally!");
+        characterManager.EnableBurn();
+    }
+    
     public void RegisterEntityToRestore(DestructableEntity entity) {
         savedObjects.Add(entity);
     }
@@ -78,7 +89,7 @@ public class GameManager : MonoBehaviour {
         block = true;
         deathAnimator.SetTrigger("Die");
         yield return new WaitForSeconds(waitForDeathAnimation);
-    
+        if (burnTicks == 0) SceneManager.LoadScene("EndGameScene");
         player.localPosition = new Vector3(checkPoint.x, checkPoint.y);
         torch.RestoreTorch();
         RestoreEntities();
@@ -129,23 +140,32 @@ public class GameManager : MonoBehaviour {
         if(block)
             return;
         HandlePlayerAction();
-        CheckTorch();
+        if (burnTicks == -1)
+        {
+            CheckTorch();
+        }
+        else if (burnTicks > 0)
+        {
+            burnTicks--;
+            if (burnTicks == 4) characterManager.Think("The time has come!");
+            if (burnTicks == 0) StartCoroutine(KillPlayer());
+        }
         tickEvent?.Invoke(tickCounter);
         tickCounter++;
     }
 
-    private void CheckTorch() {
-        if (torch.condition == 0) {
-            if (tickToDieInDark == 0) {
-                StartCoroutine(KillPlayer());
-            }
-            else {
-                tickToDieInDark--;
-            }
-
-            temperature.active = true;
-            temperature.temperature.value = Mathf.Lerp(-60.0f, 0.0f, (float) tickToDieInDark / lifeTimeInDark);
+    private void CheckTorch()
+    {
+        if (torch.condition != 0) return;
+        if (tickToDieInDark == 0) {
+            StartCoroutine(KillPlayer());
         }
+        else {
+            tickToDieInDark--;
+        }
+
+        temperature.active = true;
+        temperature.temperature.value = Mathf.Lerp(-60.0f, 0.0f, (float) tickToDieInDark / lifeTimeInDark);
     }
 
     private void HandlePlayerAction() {
