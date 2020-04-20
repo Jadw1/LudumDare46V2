@@ -13,6 +13,7 @@ public class Torch : MonoBehaviour
     public int condition;
 
     public float maxRadious;
+    public float radious;
     
     private Light2D light;
     
@@ -29,6 +30,7 @@ public class Torch : MonoBehaviour
         this.maxRadious = maxRadious;
 
         condition = maxCondition;
+        radious = maxRadious;
         light.pointLightOuterRadius = maxRadious;
     }
 
@@ -36,7 +38,8 @@ public class Torch : MonoBehaviour
         if (condition > 0) {
             condition--;
             OnTorchConditionChange?.Invoke(condition);
-            light.pointLightOuterRadius = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
+            radious = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
+            light.pointLightOuterRadius = radious;
         }
         //event if light goes out?
     }
