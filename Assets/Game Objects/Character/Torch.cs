@@ -15,10 +15,12 @@ public class Torch : MonoBehaviour
     public float radious;
     
     private Light2D light;
+    private CharacterManager character;
     
     // Start is called before the first frame update
     void Start() {
         light = GetComponent<Light2D>();
+        character = GetComponentInParent<CharacterManager>();
         GameObject.FindWithTag("Game Master").GetComponent<GameManager>().tickEvent += OnTick;
         
         SetTorch(maxCondition, maxRadious);
@@ -45,6 +47,9 @@ public class Torch : MonoBehaviour
             radious = Mathf.Lerp(0.0f, maxRadious, (float) condition / maxCondition);
             light.pointLightOuterRadius = radious;
         }
-        //event if light goes out?
+        else
+        {
+            character.Think("Oh no! I'm gonna freeze!");
+        }
     }
 }
