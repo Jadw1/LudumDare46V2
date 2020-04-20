@@ -69,7 +69,7 @@ public class CharacterInventory : MonoBehaviour
             }
             else if(item.itemType == ItemType.TORCH)
             {
-                GetComponentInChildren<Torch>().SetTorch(190, 15);
+                GetComponentInChildren<Torch>().SetTorch(170, 15);
                 LightSource = LightSource.TORCH;
             }
             
