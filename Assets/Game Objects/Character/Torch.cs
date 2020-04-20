@@ -38,6 +38,8 @@ public class Torch : MonoBehaviour
     public void RestoreTorch() {
         condition = maxCondition;
         radious = maxRadious;
+        TorchConditionChangeEvent?.Invoke(condition);
+        light.pointLightOuterRadius = radious;
     }
     
     void OnTick(int tick) {
