@@ -66,7 +66,7 @@ public class ThoughtInfo : MonoBehaviour
         
         if (_immediate)
         {
-            _tmp.SetText("");
+            _tmp.text = "";
             Enable(true);
             _thought.Clear();
             _immediate = false;
@@ -86,12 +86,12 @@ public class ThoughtInfo : MonoBehaviour
                     _thought.Enqueue(character);
                 }
 
-                _tmp.SetText("");
+                _tmp.text = "";
                 Enable(true);
             }
             else
             {
-                _tmp.SetText("");
+                _tmp.text = "";
                 Enable(false);
             }
 
