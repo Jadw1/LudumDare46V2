@@ -22,6 +22,7 @@
       <Path>Library</Path>
       <Path>Temp</Path>
       <Path>obj</Path>
+      <Path>screenshots</Path>
     </explicitExcludes>
   </component>
 </project>
